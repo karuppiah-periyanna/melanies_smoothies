@@ -4,10 +4,6 @@ from snowflake.snowpark.functions import col
 import requests
 
 
-smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
-st.text(smoothiefroot_response.json())
-
-
 # Write directly to the app
 st.title(f"Customize Your Smoothie! :cup_with_straw: {st.__version__}")
 st.write(
@@ -22,6 +18,10 @@ cnx=st.connection("snowflake")
 session = cnx.session()
 my_dataframe = session.table("smoothies.public.fruit_options").select(col('FRUIT_NAME'))
 st.dataframe(data=my_dataframe, use_container_width=True)
+
+smoothiefroot_response = requests.get("https://my.smoothiefroot.com/api/fruit/watermelon")
+#st.text(smoothiefroot_response.json())
+sf_df=st.dataframe(data=smoothiefroot_response.json(),use_container_width=True)
 
 ingredients_list=st.multiselect('Choose upto 5 Ingredients:', my_dataframe,max_selections=5)
 if ingredients_list:
